@@ -20,15 +20,36 @@
       .small { font-size:12px; color:#ddd; text-align:center; margin-top:6px; }
       /* Fullscreen container for AR */
       #ar-scene { position:fixed; inset:0; }
+      body {
+  background: radial-gradient(circle at top, #001020, #000);
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+}
+
+.links {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+}
+
+.link:hover {
+  background: #00e0ff;
+  color: #000;
+  transform: scale(1.03);
+}
+
     </style>
   </head>
   <body>
     <div id="ar-scene">
-      <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
+      <a-scene embedded
+         arjs="trackingMethod: best; sourceType: webcam; detectionMode: mono_and_matrix; matrixCodeType: 3x3; maxDetectionRate: 60; patternRatio: 0.7; debugUIEnabled: false;">
+
         <!-- marker: replace 'pattern-marker.patt' with your .patt path -->
         <a-marker type='pattern' url='marker.patt'>
           <!-- glb model: replace with your hosted .glb url -->
-          <a-entity gltf-model="url(3d-1.glb)"
+          <a-entity gltf-model="url(3d-2.glb)"
                     scale="5 5 5"
                     position="0 -1 -1"
                     rotation="0 90 0"
