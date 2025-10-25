@@ -1,83 +1,146 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>AR Quick Project</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- A-Frame + AR.js -->
+    <title>My WebAR Pro - Stage 2.5</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- مكتبات -->
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script src="https://rawcdn.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+
     <style>
-      body { margin:0; font-family: Inter, system-ui; background:#000; color:#fff; }
-      /* LinkTree-like overlay */
-      .links {
-        position: fixed; right: 18px; top: 18px; width: 260px;
-        background: rgba(0,0,0,0.55); border-radius:12px; padding:12px;
-        backdrop-filter: blur(6px); box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-      }
-      .links h3 { margin:4px 0 8px; font-size:16px; text-align:center; color:#ffd54f; }
-      .link { display:block; margin:8px 0; padding:8px 10px; border-radius:8px; text-decoration:none; color:#001; background:#e6f7ff; font-weight:600; }
-      .small { font-size:12px; color:#ddd; text-align:center; margin-top:6px; }
-      /* Fullscreen container for AR */
-      #ar-scene { position:fixed; inset:0; }
       body {
-  background: radial-gradient(circle at top, #001020, #000);
-  font-family: 'Poppins', sans-serif;
-  color: #fff;
-}
+        margin: 0;
+        overflow: hidden;
+        background: radial-gradient(circle at top, #001628, #000);
+        font-family: 'Poppins', sans-serif;
+      }
 
-.links {
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(12px);
-  transition: all 0.3s ease;
-}
+      /* واجهة الروابط */
+      .links {
+        position: fixed;
+        top: 50%;
+        right: 6%;
+        transform: translateY(-50%);
+        width: 220px;
+        background: rgba(0, 60, 150, 0.25);
+        border: 1px solid rgba(0, 180, 255, 0.3);
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+        padding: 15px 10px;
+        box-shadow: 0 0 20px rgba(0, 120, 255, 0.25);
+      }
 
-.link:hover {
-  background: #00e0ff;
-  color: #000;
-  transform: scale(1.03);
-}
+      .links h3 {
+        text-align: center;
+        color: #00d4ff;
+        margin: 6px 0 12px;
+        font-weight: 600;
+        font-size: 17px;
+      }
 
+      .link {
+        display: block;
+        margin: 8px 0;
+        text-decoration: none;
+        color: #fff;
+        background: rgba(0, 80, 180, 0.45);
+        border-radius: 10px;
+        padding: 8px;
+        text-align: center;
+        transition: all 0.3s;
+      }
+
+      .link:hover {
+        background: rgba(0, 190, 255, 0.8);
+        color: #000;
+        transform: scale(1.05);
+      }
     </style>
   </head>
+
   <body>
-    <div id="ar-scene">
-      <a-scene embedded
-         arjs="trackingMethod: best; sourceType: webcam; detectionMode: mono_and_matrix; matrixCodeType: 3x3; maxDetectionRate: 60; patternRatio: 0.7; debugUIEnabled: false;">
+    <!-- مشهد الواقع -->
+    <a-scene
+      embedded
+      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+      vr-mode-ui="enabled: false"
+    >
+      <!-- الماركر -->
+      <a-marker
+        type="pattern"
+        url="marker.patt"
+        id="marker"
+      ></a-marker>
 
-        <!-- marker: replace 'pattern-marker.patt' with your .patt path -->
-        <a-marker type='pattern' url='marker.patt'>
-          <!-- glb model: replace with your hosted .glb url -->
-          <a-entity gltf-model="url(3d-2.glb)"
-                    scale="5 5 5"
-                    position="0 -1 -1"
-                    rotation="0 90 0"
-                    animation-mixer></a-entity>
-        </a-marker>
-        <a-entity camera></a-entity>
-      </a-scene>
-    </div>
+      <!-- المجسم (خارج الماركر حتى يثبت بالعالم) -->
+      <a-entity
+        id="myModel"
+        gltf-model="3d-2.glb"
+        visible="false"
+        scale="0.6 0.6 0.6"
+        position="0 0 0"
+        rotation="0 0 0"
+      ></a-entity>
 
+      <a-entity camera></a-entity>
+    </a-scene>
+
+    <!-- واجهة الروابط -->
     <div class="links">
-      <h3>اسمي ومشروعي</h3>
-      <a class="link" href="https://example.com/product" target="_blank">متجر المنتج</a>
-      <a class="link" href="https://example.com/video" target="_blank">شاهد الفيديو</a>
-      <a class="link" href="https://t.me/your" target="_blank">تواصل تليجرام</a>
-      <div class="small">إفتح الكاميرا وموجه الماركر</div>
+      <h3>مشروع تِمو</h3>
+      <a class="link" href="https://example.com/shop" target="_blank">المتجر</a>
+      <a class="link" href="https://example.com/video" target="_blank">الفيديو</a>
+      <a class="link" href="https://t.me/example" target="_blank">تواصل</a>
     </div>
 
     <script>
-      // Optional: small UX helper - show permission prompt hint
-      // Not required: browser will prompt camera permission when scene active
-      (async ()=> {
-        try {
-          // detect if getUserMedia available
-          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
-          // no immediate call — A-Frame/AR.js will prompt; this is only optional pre-check
-          console.log('Webcam available');
-        } catch(e) { console.warn(e); }
-      })();
+      const marker = document.querySelector("#marker");
+      const model = document.querySelector("#myModel");
+      let anchored = false;
+
+      // أول مرة يشوف الماركر
+      marker.addEventListener("markerFound", () => {
+        if (anchored) return;
+        const marker3D = marker.object3D;
+        const pos = new THREE.Vector3();
+        marker3D.getWorldPosition(pos);
+        const rot = new THREE.Euler();
+        rot.copy(marker3D.rotation);
+
+        // نخلي المجسم بنفس المكان
+        model.object3D.position.copy(pos);
+        model.object3D.rotation.copy(rot);
+        model.setAttribute("visible", true);
+        anchored = true;
+        console.log("Model anchored at:", pos);
+      });
+
+      // سحب بالإصبع لتغيير الموقع
+      let dragging = false;
+      let lastX = 0, lastY = 0;
+
+      window.addEventListener("touchstart", (e) => {
+        dragging = true;
+        lastX = e.touches[0].clientX;
+        lastY = e.touches[0].clientY;
+      });
+
+      window.addEventListener("touchmove", (e) => {
+        if (!dragging || !anchored) return;
+        const dx = (e.touches[0].clientX - lastX) / 200;
+        const dy = (e.touches[0].clientY - lastY) / 200;
+        lastX = e.touches[0].clientX;
+        lastY = e.touches[0].clientY;
+        // نحرك المجسم بالعالم (بشكل بسيط)
+        model.object3D.position.x += dx;
+        model.object3D.position.z += dy;
+      });
+
+      window.addEventListener("touchend", () => {
+        dragging = false;
+      });
     </script>
   </body>
 </html>
