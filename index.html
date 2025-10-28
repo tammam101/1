@@ -2,102 +2,44 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>My WebAR — MindAR Edition</title>
+    <title>My WebAR - Minimal Edition</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- مكتبات -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/examples/js/loaders/GLTFLoader.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/examples/js/controls/OrbitControls.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"></script>
 
     <style>
-      body { margin: 0; overflow: hidden; background: #000; font-family: "Poppins", sans-serif; }
-
-      /* الواجهة الجديدة */
-      .links {
-        position: fixed;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 95%;
-        height: 30%;
-        background: rgba(15, 25, 35, 0.75);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px 20px 0 0;
-        backdrop-filter: blur(10px);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 14px;
-      }
-
-      .link {
-        flex: 1;
-        max-width: 140px;
-        text-align: center;
-        color: #fff;
-        text-decoration: none;
-        padding: 10px 8px;
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 12px;
-        transition: 0.3s;
-      }
-
-      .link:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: translateY(-4px);
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: #000;
       }
     </style>
   </head>
+
   <body>
-    <div id="container"></div>
-
-    <div class="links">
-      <a class="link" href="https://example.com/shop" target="_blank">🛒 المتجر</a>
-      <a class="link" href="https://example.com/info" target="_blank">ℹ️ معلومات</a>
-      <a class="link" href="https://t.me/example" target="_blank">💬 تواصل</a>
-    </div>
-
     <script>
+      // إنشاء مشهد MindAR
       const mindarThree = new window.MINDAR.IMAGE.MindARThree({
         container: document.body,
-        imageTargetSrc: "marker.mind", // نولدها من موقع MindAR
+        imageTargetSrc: "marker.mind", // ملف الماركر بصيغة .mind
       });
 
       const { renderer, scene, camera } = mindarThree;
 
+      // إضاءة بسيطة
       const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
       scene.add(light);
 
+      // تحميل المجسم
       const loader = new THREE.GLTFLoader();
       let model, controls;
 
       loader.load("3d-2.glb", (gltf) => {
         model = gltf.scene;
         model.scale.set(0.6, 0.6, 0.6);
-        model.rotation.set(0, Math.PI / 2, 0); // تعديل الاتجاه
+        model.rotation.set(-Math.PI / 2, 0, 0); // تعديل الاتجاه
         scene.add(model);
-
-        // أداة التحكم (مثل gltf.report)
-        controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.enablePan = false;
-        controls.target.set(0, 0.1, 0);
-        controls.minDistance = 0.5;
-        controls.maxDistance = 2;
-        controls.update();
-      });
-
-      // بدء التشغيل
-      const start = async () => {
-        await mindarThree.start();
-        renderer.setAnimationLoop(() => {
-          if (controls) controls.update();
-          renderer.render(scene, camera);
-        });
-      };
-
-      start();
-    </script>
-  </body>
-</html>
